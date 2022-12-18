@@ -104,7 +104,7 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars()
+	vars := mux.Vars(r)
 	user := model.User{}
 
 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
@@ -125,7 +125,7 @@ func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = user.DeleteUser(server.DB, uint32(uid))
+	_, err = user.DeleteUser(server.DB, int32(uid))
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
@@ -142,7 +142,7 @@ func (server *Server) GetUserbyID(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
-	user := models.User{}
+	user := model.User{}
 	userGotten, err := user.FindUserByID(server.DB, uint32(uid))
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
